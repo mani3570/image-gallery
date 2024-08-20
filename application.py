@@ -11,10 +11,10 @@ load_dotenv()
 
 MONGO_URL = os.getenv("MONGO_URL")
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 # Set a secret key for session management
-app.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
+application.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
 
 # MongoDB Atlas connection string
 client = MongoClient(MONGO_URL)
@@ -22,7 +22,7 @@ db = client["pbl_cloud"]
 users_collection = db["users"]
 
 
-# @app.route("/index")
+# @application.route("/index")
 # def index():
 #     if "username" not in session:
 #         return redirect(url_for("home"))
@@ -30,7 +30,7 @@ users_collection = db["users"]
 #     return render_template("index.html")
 
 
-@app.route("/view")
+@application.route("/view")
 def view():
     if "username" not in session:
         return redirect(url_for("home"))
@@ -39,14 +39,14 @@ def view():
     user_uploads = db[session["username"]].find()
     uploads = []
     for upload in user_uploads:
-        uploads.append(
+        uploads.applicationend(
             {"filename": upload["filename"], "image_data": upload["image_data"]}
         )
 
     return render_template("view.html", uploads=uploads)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@application.route("/login", methods=["GET", "POST"])
 def user_login():
     if request.method == "POST":
         username = request.form.get("username")
@@ -62,7 +62,7 @@ def user_login():
     return render_template("login.html")
 
 
-@app.route("/signup", methods=["GET", "POST"])
+@application.route("/signup", methods=["GET", "POST"])
 def user_signup():
     if request.method == "POST":
         username = request.form.get("username")
@@ -79,7 +79,7 @@ def user_signup():
     return render_template("signup.html")
 
 
-@app.route("/upload", methods=["POST"])
+@application.route("/upload", methods=["POST"])
 def upload_file():
     if "username" not in session:
         return redirect(url_for("home"))  # Ensure user is logged in to upload files
@@ -101,7 +101,7 @@ def upload_file():
         return render_template("view.html")
 
 
-@app.route("/")
+@application.route("/")
 def home():
     if "username" in session:
         return render_template(
@@ -110,11 +110,11 @@ def home():
     return render_template("login.html")
 
 
-@app.route("/logout")
+@application.route("/logout")
 def logout():
     session.pop("username", None)  # Log out the user
     return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    application.run(debug=True, host="0.0.0.0", port=5000)
