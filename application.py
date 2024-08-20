@@ -39,7 +39,7 @@ def view():
     user_uploads = db[session["username"]].find()
     uploads = []
     for upload in user_uploads:
-        uploads.applicationend(
+        uploads.append(
             {"filename": upload["filename"], "image_data": upload["image_data"]}
         )
 
