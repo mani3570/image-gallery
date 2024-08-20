@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uploaded Images</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="file" />
+      <input type="submit" value="upload" />
+    </form>
+    <button>
+      <a href="{{ url_for('view') }}">view</a>
+    </button>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </body>
+</html>

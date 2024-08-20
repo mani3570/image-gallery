@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uploaded Images</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h2>Your Uploaded Images</h2>
+    <div>
+      {% for upload in uploads %}
+      <div>
+        <h3>{{ upload.filename }}</h3>
+        <img
+          src="data:image/png;base64,{{ upload.image_data }}"
+          alt="{{ upload.filename }}"
+        />
+      </div>
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </body>
+</html>
