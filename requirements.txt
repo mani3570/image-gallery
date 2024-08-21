@@ -2,3 +2,4 @@ flask
 werkzeug 
 pymongo
 python-dotenv
+flask-talisman

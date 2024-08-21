@@ -11,7 +11,7 @@
   </head>
   <body>
     <h2>Your Uploaded Images</h2>
-    <div>
+    <div class="gallery">
       {% for upload in uploads %}
       <div>
         <h3>{{ upload.filename }}</h3>
@@ -22,6 +22,8 @@
       </div>
       {% endfor %}
     </div>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <div class="logout">
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
   </body>
 </html>

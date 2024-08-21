@@ -6,12 +6,25 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 import base64
+from flask_talisman import Talisman
 
 load_dotenv()
 
 MONGO_URL = os.getenv("MONGO_URL")
 
 application = Flask(__name__)
+
+# Set up Talisman with a relaxed Content Security Policy to allow Base64 images
+csp = {
+    'default-src': [
+        '\'self\''
+    ],
+    'img-src': [
+        '\'self\'',
+        'data:'  # Allow images from data URIs (Base64)
+    ]
+}
+Talisman(application, content_security_policy=csp)
 
 # Set a secret key for session management
 application.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
@@ -20,15 +33,6 @@ application.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
 client = MongoClient(MONGO_URL)
 db = client["pbl_cloud"]
 users_collection = db["users"]
-
-
-# @application.route("/index")
-# def index():
-#     if "username" not in session:
-#         return redirect(url_for("home"))
-
-#     return render_template("index.html")
-
 
 @application.route("/view")
 def view():
@@ -45,7 +49,6 @@ def view():
 
     return render_template("view.html", uploads=uploads)
 
-
 @application.route("/login", methods=["GET", "POST"])
 def user_login():
     if request.method == "POST":
@@ -60,7 +63,6 @@ def user_login():
         else:
             return "Invalid username or password"
     return render_template("login.html")
-
 
 @application.route("/signup", methods=["GET", "POST"])
 def user_signup():
@@ -77,7 +79,6 @@ def user_signup():
         session["username"] = username  # Log in the user after signup
         return redirect(url_for("user_login"))  # Redirect to login after signup
     return render_template("signup.html")
-
 
 @application.route("/upload", methods=["POST"])
 def upload_file():
@@ -98,8 +99,7 @@ def upload_file():
         user_collection = db[session["username"]]
         user_collection.insert_one({"filename": filename, "image_data": image_data})
 
-        return render_template("view.html")
-
+        return redirect(url_for("view"))
 
 @application.route("/")
 def home():
@@ -109,12 +109,10 @@ def home():
         )  # Redirect logged-in users to the index page
     return render_template("login.html")
 
-
 @application.route("/logout")
 def logout():
     session.pop("username", None)  # Log out the user
     return redirect(url_for("home"))
-
 
 if __name__ == "__main__":
     application.run(debug=True, host="0.0.0.0", port=5000)
