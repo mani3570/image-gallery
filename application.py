@@ -14,17 +14,17 @@ MONGO_URL = os.getenv("MONGO_URL")
 
 application = Flask(__name__)
 
-# Set up Talisman with a relaxed Content Security Policy to allow Base64 images
-csp = {
-    'default-src': [
-        '\'self\''
-    ],
-    'img-src': [
-        '\'self\'',
-        'data:'  # Allow images from data URIs (Base64)
-    ]
-}
-Talisman(application, content_security_policy=csp)
+# # Set up Talisman with a relaxed Content Security Policy to allow Base64 images
+# csp = {
+#     'default-src': [
+#         '\'self\''
+#     ],
+#     'img-src': [
+#         '\'self\'',
+#         'data:'  # Allow images from data URIs (Base64)
+#     ]
+# }
+# Talisman(application, content_security_policy=csp)
 
 # Set a secret key for session management
 application.secret_key = os.getenv("SECRET_KEY", "default_secret_key")
