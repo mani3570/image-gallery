@@ -99,7 +99,7 @@ def upload_file():
         user_collection = db[session["username"]]
         user_collection.insert_one({"filename": filename, "image_data": image_data})
 
-        return redirect(url_for("view"))
+        return render_template("index.html")
 
 @application.route("/")
 def home():
